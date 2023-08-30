@@ -1,18 +1,24 @@
+# This imports the core models module from Django, which provides classes for defining database models
 from django.db import models
 
-# import the built-in User model that we want to extend
+# This imports the built-in User model from Django's authentication system, which will be extended to include a profile
 from django.contrib.auth.models import User
 
-# import post_save
+# This imports the post_save signal, which is emitted after a model's save method is called.
 from django.db.models.signals import post_save
 
-# import receiver
+# This imports the receiver decorator, used to create a signal receiver function
 from django.dispatch import receiver
 
+#defines a custom model named Profile that inherits from Django's models.Model
 class Profile(models.Model):
-    # define a OneToOneField object called user
+
+    # creates a one-to-one relationship field named user
+    # links the Profile model to the built-in User model
+    # on_delete parameter specifies that when a User is deleted, the associated Profile should also be deleted
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # define a ManyToManyField object with the field name follows
+
+    # creates a many-to-many relationship field within the Profile model
     follows = models.ManyToManyField(
         "self",
         # access data entries from the other end of the relationship
@@ -28,17 +34,23 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
  
-# apply the receiver decorator to create_profile
-# passing it post_save and passing the User model to sender
+# signal receiver decorator
+# connects the create_profile function to the post_save signal emitted by the User model
 @receiver(post_save, sender=User)
+
+# function is triggered whenever a User model is saved
 def create_profile(sender, instance, created, **kwargs):
-    # ceated is provided by post_save
+
+    # checks if a new User instance was created
     if created:
-        # associate a profile with a user
+        # creates a Profile instance associated with the new User instance
+        # effectively creating a profile for each new user
         user_profile = Profile(user=instance)
         user_profile.save()
-        # add the profile associated with your new user account to the list of accounts that the user is following
+
+        # attempts to set the initial follow relationship for the user's profile to itself
         user_profile.follows.set([instance.profile.id])
-        # commit the new profile to your database
+
+        # user_profile instance is saved to the database
         user_profile.save()
 
