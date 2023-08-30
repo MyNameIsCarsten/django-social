@@ -24,3 +24,12 @@
 - [ x ] [Step 6: Access Individual Profile Pages](https://realpython.com/django-social-front-end-2/#step-6-access-individual-profile-pages)
     - [ x ] Build a Profile Page Template
     - [ x ] Link the Profile Pages
+- [ x ] [Step 7: Follow and Unfollow Other Profiles](https://realpython.com/django-social-post-3/#step-7-follow-and-unfollow-other-profiles)
+    - [ x ] Add Buttons to Your Profiles
+    - [ x ] Handle POST Requests in Django Code Logic
+- [ x ] [Step 8: Create the Back-End Logic For Dweets](https://realpython.com/django-social-post-3/#step-8-create-the-back-end-logic-for-dweets)
+    - [ x ] Make the Model
+    - [ x ] Add Dweets Through the Admin Interface
+- [ x ] [Step 9: Display Dweets on the Front End](https://realpython.com/django-social-post-3/#step-9-display-dweets-on-the-front-end)
+    - [ x ] Display Personal Dweets on Each Profile Page
+    - [ x ] Create a Dashboard View
