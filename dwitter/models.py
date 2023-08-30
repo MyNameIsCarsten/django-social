@@ -54,3 +54,29 @@ def create_profile(sender, instance, created, **kwargs):
         # user_profile instance is saved to the database
         user_profile.save()
 
+
+class Dweet(models.Model):
+    # user field establishes the model relationship to Django’s built-in User model
+    # foreign key relationship: each dweet will be associated with a user
+    # pass "dweets" to related_name: allows you to access the dweet objects from the user side of the relationship through .dweets
+    # orphaned dweets should stick around by setting on_delete to models.DO_NOTHING
+    user = models.ForeignKey(
+        # 'dweets' gives you reverse access to the associated Dweet objects through the User model
+        User, related_name="dweets", on_delete=models.DO_NOTHING
+    )
+
+    # body field defines your content type
+    body = models.CharField(max_length=140)
+
+    # created_at field records the date and time when the text-based message is submitted
+    # value gets automatically added when a user submits a dweet
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # custom string: username, the created date, and the first thirty characters of the message body
+    def __str__(self):
+        return (
+            f"{self.user} "
+            f"({self.created_at:%Y-%m-%d %H:%M}): "
+            f"{self.body[:30]}..."
+        )
+
