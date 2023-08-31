@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+
 urlpatterns = [
     # redirect all requests made to the base URL ("") to your dwitter app’s urls.py file
     path("", include("dwitter.urls")),
