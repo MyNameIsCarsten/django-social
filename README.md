@@ -130,8 +130,5 @@ The users can also view their profiles:
 
 
 # Coming Up
-Here are some ideas to take your project to the next level:
-
 - Implement User Authentication: Allow new users to sign up through the front end of your web app by following the steps outlined in [Get Started With Django Part 2: Django User Management](https://realpython.com/django-user-management/).
-- Deploy Your Dwitter Project: Put your web app online for the whole world to see by [hosting your Django project on Heroku](https://realpython.com/django-hosting-on-heroku/).
-- Get Social: Invite your friends to join your Django social network, and start dweeting your thoughts to one another.
+- Deploy Your Dwitter Project: Put web app online for the whole world to see by [hosting your Django project on Heroku](https://realpython.com/django-hosting-on-heroku/).
