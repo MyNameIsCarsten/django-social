@@ -7,6 +7,7 @@ app_name = "dwitter"
 
 urlpatterns = [
     path("", dashboard, name="dashboard"),
+    
     # route requests that come to /profile_list to the view function called profile_list()
     path("profile_list/", profile_list, name="profile_list"),
 
