@@ -20,10 +20,12 @@
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
+                <a href="{% url 'dwitter:password_reset' %}">Reset password</a>
                 <input class="button is-success is-fullwidth is-medium mt-5" type="submit" value="Login">
             </form>
-        
-            <a href="{% url 'dwitter:password_reset' %}">Reset password</a>
+            
+            <a href="{% url 'dwitter:signup' %}">Signup</a>
+            
         </div>
     </div>
     <article class="message is-success">

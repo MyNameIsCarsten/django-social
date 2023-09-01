@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<style>
+    label, input {
+        display: block;
+    }
+    span.helptext {
+        display: none;
+    }
+  </style>
+  <div class="column is-one-third">
+    <div class="block">
+        
+        <h2 class="title is-4">Upload File</h2>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="button is-success is-fullwidth is-medium mt-5" type="submit">Upload</button>
+        </form>
+
+    <a href="{% url 'dwitter:dashboard' %}">Back to dashboard</a>
+    </div>
+</div>
+{% endblock %}

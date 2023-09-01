@@ -15,7 +15,15 @@
     <a href="{% url 'dwitter:dashboard' %} ">
         <section class="hero is-small is-success mb-4">
             <div class="hero-body">
-                <h1 class="title is-1">Dwitter</h1>
+                <h1 class="title is-1">
+                    <span>Dwitter</span>
+                    {% block hello %}
+                    {% if user.username %}
+                    <span class="title is-1">, welcome {{ user.username|default:'' }}!</span>
+                    {% endif %}
+                {% endblock %}
+                </h1>
+                
                 <p class="subtitle is-4">
                     Your tiny social network built with Django
                 </p>

@@ -2,6 +2,14 @@
 
 {% block content %}
 
+{% if messages %}
+<ul class="messages">
+    {% for message in  messages %}
+    <li {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <div class="column">
     {% for dweet in dweets %}
         <div class="box">
@@ -17,12 +25,15 @@
 <div class="column is-one-third">
     <div class="title is-4">
         {% block user %}
-        Logged in as: {{ user.username|default:'Guest' }}
         <div>
             {% if user.is_authenticated %}
                 <a href="{% url 'dwitter:logout' %}">Logout</a>
                 <br>
                 <a href="{% url 'dwitter:change_password' %}">Change password</a>
+                <br>
+                <a href="{% url 'dwitter:model_form_upload' %}">Upload File</a>
+                <br>
+                
             {% else %}
                 <a href="{% url 'dwitter:login' %}">Login</a>
             {% endif %}

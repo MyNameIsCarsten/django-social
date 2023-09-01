@@ -1,7 +1,7 @@
 # import Django’s built-in forms module 
 from django import forms
 # import the Dweet model that you created
-from .models import Dweet
+from .models import Dweet, some_files
 
 # create a new class, DweetForm, that inherits from forms.ModelForm
 class DweetForm(forms.ModelForm):
@@ -34,3 +34,10 @@ class DweetForm(forms.ModelForm):
         # omit our profile
         # fromat as tuple!
         exclude = ("user", )
+
+class some_filesForm(forms.ModelForm):
+    class Meta:
+        model = some_files
+        fields = ('description', 'some_file')
+        #fields = ('description', 'some_file', 'file_of_user')
+        

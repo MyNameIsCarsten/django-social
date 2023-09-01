@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 
 # Import our form
-from .forms import DweetForm
+from .forms import DweetForm, some_filesForm
 
 # Import our Dweet and Profile model
-from .models import Dweet, Profile
+from .models import Dweet, Profile, some_files
 
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -15,6 +15,9 @@ from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 
 from django.views import generic
+
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 
 
 # pointing the incoming request to base.html and telling Django to render that template
@@ -165,3 +168,34 @@ class SignUpView(generic.CreateView):
     # so we have to use the lazy form of reverse to load them later when they're available
     success_url = reverse_lazy("dwitter:login")
     template_name = "registration/signup.html"
+
+'''
+def simple_upload(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile =  request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+        messages.success(request, f'{filename} was successfully uploaded!')
+        return redirect('dwitter:dashboard')
+    return render(request, 'dwitter/simple_upload.html')
+'''
+
+
+def model_form_upload(request):
+    if request.method == 'POST':
+        form = some_filesForm(request.POST, request.FILES)
+        if form.is_valid():
+            # prevent committing the entry to the database
+            user_files = form.save(commit=False)
+            # pick the currently logged-in user object from Django’s request object
+            user_files.user = request.user
+            # write the information to your database
+            user_files.save()
+            return redirect('dwitter:dashboard')
+    else:
+        form = some_filesForm()
+    return render( request, 'dwitter/model_form_upload.html', {
+        'form': form
+    })
+

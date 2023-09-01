@@ -14,7 +14,8 @@ from django.contrib.auth.views import (
     PasswordResetCompleteView
 )
 
-from dwitter.views import ResetPasswordView, SignUpView
+from dwitter.views import ResetPasswordView, SignUpView, model_form_upload
+#from dwitter.views import simple_upload
 
 app_name = "dwitter"
 
@@ -62,5 +63,9 @@ urlpatterns = [
     path('password-reset-complete/',
          auth_views.PasswordResetCompleteView.as_view(template_name='dwitter/password_reset_complete.html'),
          name='password_reset_complete'),
+
+    #url(r'^uploads/simple/$', simple_upload, name='simple_upload'),
+
+    url(r'^uploads/model/$', model_form_upload, name='model_form_upload'),
 
 ]
