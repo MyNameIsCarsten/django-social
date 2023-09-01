@@ -8,9 +8,13 @@ from .models import Dweet, Profile
 
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm
 
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
 
+from django.views import generic
 
 
 # pointing the incoming request to base.html and telling Django to render that template
@@ -134,3 +138,30 @@ def change_password(request):
     return render(request, 'dwitter/change_password.html', {
         'form': form
     })
+
+
+
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    # if not given any, django defaults to registration/password_reset_form.html to render the associated template for the view
+    template_name = 'dwitter/password_reset.html'
+    # template used for generating the body of the email with the reset password link
+    email_template_name = 'dwitter/password_reset_email.html'
+    # template used for generating the subject of the email with the reset password link
+    subject_template_name = 'dwitter/password_reset_subject.txt'
+    # message that will be displayed upon a successful password reset request
+    success_message = "We've emailed you instructions for setting your password, " \
+                      "if an account exists with the email you entered. You should receive them shortly." \
+                      " If you don't receive an email, " \
+                      "please make sure you've entered the address you registered with, and check your spam folder."
+    # If not given any, django defaults to 'password_reset_done' after a successful password request. 
+    # But I think it makes sense to just redirect the user to the home page without providing any additional template.
+    success_url = reverse_lazy('dwitter:dashboard')
+
+
+class SignUpView(generic.CreateView):
+    form_class = UserCreationForm
+    # use reverse_lazy to redirect the user to the login page upon successful registration
+    # for all generic class-based views the urls are not loaded when the file is imported, 
+    # so we have to use the lazy form of reverse to load them later when they're available
+    success_url = reverse_lazy("dwitter:login")
+    template_name = "registration/signup.html"

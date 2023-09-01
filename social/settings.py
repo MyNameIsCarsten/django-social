@@ -135,3 +135,7 @@ LOGOUT_REDIRECT_URL = "dwitter:login"
 # simple SMTP server at http://localhost:1025 to confirm that emails are sent for password resets
 EMAIL_HOST = "localhost"
 EMAIL_PORT = 1025
+# This will display the mail on the console for Easy Verification.
+# Note: Mail will not be sent to the specified recipient in Msg.Its just for Development and Testing.
+# For that you need to configure SMTP server which is given in the Doc.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -14,6 +14,8 @@ from django.contrib.auth.views import (
     PasswordResetCompleteView
 )
 
+from dwitter.views import ResetPasswordView, SignUpView
+
 app_name = "dwitter"
 
 urlpatterns = [
@@ -40,7 +42,25 @@ urlpatterns = [
     # login / logout urls
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
 
+    # signup
+    path("signup/", SignUpView.as_view(), name="signup"),
+
     # change password urls
     path('password/', change_password, name='change_password'),
+
+    # password reset
+    path('password-reset/', ResetPasswordView.as_view(), name='password_reset'),
+
+    # PasswordResetConfirmView is the view responsible for presenting this password reset form, and validating the token 
+    # i.e. whether or not the token has expired, or if it has been used already
+    # uidb64: The user’s id encoded in base 64.
+    # token: Password recovery token to check that the password is valid.
+    path('password-reset-confirm/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(template_name='dwitter/password_reset_confirm.html'),
+         name='password_reset_confirm'),
+
+    path('password-reset-complete/',
+         auth_views.PasswordResetCompleteView.as_view(template_name='dwitter/password_reset_complete.html'),
+         name='password_reset_complete'),
 
 ]
