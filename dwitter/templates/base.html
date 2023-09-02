@@ -29,12 +29,23 @@
             color: white;
         }
 
+        .pipe {
+            color: white;
+            padding: 0px 10px;
+        }
+
         .level-item a:hover {
             color: rgb(218, 218, 218);
         }
 
         .user {
             font-weight: bold;
+        }
+
+        .avatar-nav {
+            border-radius: 100px;
+            width: 40px;
+            aspect-ratio: 1/1;
         }
     </style>
     <nav class="level">
@@ -48,8 +59,20 @@
         <div class="level-right">
             {% if user.is_authenticated %}
                 <p class="level-item user">
-                    <a href="{% url 'dwitter:profile' request.user.profile.id %}">{{ user.username }}</a>
+                    <a href="{% url 'dwitter:profile' request.user.profile.id %}">
+                        {{ user.username }}                      
+                    </a>
                 </p>
+                <p class="level-item user">
+                    <a href="{% url 'dwitter:profile' request.user.profile.id %}">
+                        {% if loggedInUser.user_avatar %}
+                        <img class="avatar-nav" src="../../../media/{{ loggedInUser.user_avatar }}" alt="">
+                        {% endif %}
+                        
+                    </a>
+                </p>
+                <span class="pipe">|</span>
+            
                 <p class="level-item">
                     <a href="{% url 'dwitter:logout' %}">Logout</a>
                 </p>

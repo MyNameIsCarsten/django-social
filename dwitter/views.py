@@ -1,10 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Import our form
-from .forms import DweetForm, some_filesForm
+from .forms import DweetForm, some_filesForm, ProfileForm
 
 # Import our Dweet and Profile model
 from .models import Dweet, Profile, some_files
+
+from django.contrib.auth.models import User
 
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
@@ -20,16 +22,24 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
 
+def base_infos(request):
+    id = request.user.id
+    obj= get_object_or_404(Profile, id=id) 
+    return obj
+
 # pointing the incoming request to base.html and telling Django to render that template
 def dashboard(request):
     # Check if the user is logged in
     # if yes, show dashboard with dweets
+
     if str(request.user) != 'AnonymousUser':
         # fill DweetForm with the data that came in through the POST request
         # 'bound form' or 'unbound form'
         # If request.POST exists we get truthy (or None wile be ignored)
         # If there is no POST request we pass 'None'
         form = DweetForm(request.POST or None)
+
+        obj = base_infos(request)
 
         #  If a user submits the form with an HTTP POST request, then we want to handle that form data
         if request.method == "POST":
@@ -50,7 +60,7 @@ def dashboard(request):
                 # send the user back to the same page with a GET request
                 # prevents double submissions
                 # app_name variable : name keyword argument of a path(), which you defined in your URL configuration
-                return redirect("dwitter:dashboard")
+                return redirect("dwitter:dashboard", {'loggedInUser': obj})
             
         # use .filter() on Dweet.objects, which allows you to pick particular dweet objects from the table depending on field lookups
         followed_dweets = Dweet.objects.filter(
@@ -70,13 +80,14 @@ def dashboard(request):
             request, 
             "dwitter/dashboard.html", 
             # followed_dweets variable contains a QuerySet object of all the dweets of all the profiles the current user follows, ordered by the newest dweet first
-            {"form": form, "dweets": followed_dweets},
+            {"form": form, "dweets": followed_dweets, 'loggedInUser': obj},
             )
     # if not, redirect to login page
     else:
         return redirect("dwitter:login")
 
 def profile_list(request):
+    obj = base_infos(request)
     # use Django’s object-relational mapper (ORM) to retrieve objects from your profile table
     # store them in profiles
     # get all user profiles except for your own (exclude yourself)
@@ -84,10 +95,10 @@ def profile_list(request):
 
     # call to render(), to which you pass a string for the template you want to render 
     # context dictionary that contains profiles
-    return render(request, "dwitter/profile_list.html", {"profiles": profiles})
+    return render(request, "dwitter/profile_list.html", {"profiles": profiles, 'loggedInUser': obj})
 
 def profile(request, pk):
-
+    obj = base_infos(request)
     # in case you haven’t created profiles for you and your existing users
     # verify that your user has a profile in your profile view:
     # check whether request.user contains profile
@@ -121,12 +132,13 @@ def profile(request, pk):
 
         #propagate the changes to .follows back to the database
         current_user_profile.save()
-    return render(request, "dwitter/profile.html", {"profile": profile})
+    return render(request, "dwitter/profile.html", {"profile": profile, 'loggedInUser': obj})
 
 
 
 
 def change_password(request):
+    obj = base_infos(request)
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -139,7 +151,8 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'dwitter/change_password.html', {
-        'form': form
+        'form': form,
+        'loggedInUser': obj
     })
 
 
@@ -183,6 +196,7 @@ def simple_upload(request):
 
 
 def model_form_upload(request):
+    obj = base_infos(request)
     if request.method == 'POST':
         form = some_filesForm(request.POST, request.FILES)
         if form.is_valid():
@@ -196,6 +210,52 @@ def model_form_upload(request):
     else:
         form = some_filesForm()
     return render( request, 'dwitter/model_form_upload.html', {
-        'form': form
+        'form': form,
+        'loggedInUser': obj
     })
 
+'''
+class ProfileView(generic.CreateView):
+    form_class = ProfileForm
+    # use reverse_lazy to redirect the user to the login page upon successful registration
+    # for all generic class-based views the urls are not loaded when the file is imported, 
+    # so we have to use the lazy form of reverse to load them later when they're available
+    success_url = reverse_lazy("dwitter:dashboard")
+    template_name = "dwitter/profile_change.html"
+'''
+
+    
+def profile_edit(request, pk):
+
+    obj = base_infos(request)  
+
+
+    form = ProfileForm(request.POST or None, instance= obj)
+    context= {'form': form, 'profile': obj}
+    if request.method == 'POST':
+        print(request.POST)
+        print(request.FILES['user_avatar'])
+        print(obj._meta.fields)
+        print(obj.user_avatar)
+
+        if form.is_valid():
+            obj= form.save(commit= False)
+            obj.user_avatar = request.FILES['user_avatar']
+
+            obj.save()
+
+            messages.success(request, "You successfully updated your profile")
+
+            context= {'form': form, 'profile': obj}
+
+            return render(request, 'dwitter/profile_change.html', context)
+
+        else:
+            f=ProfileForm(request.POST or None, instance= obj)
+            print(f.errors)
+            context= {'form': form,
+                        'error': 'The form was not updated successfully.', 
+                        'profile': obj}
+            return render(request,'dwitter/profile_change.html' , context)
+    else:
+        return render(request,'dwitter/profile_change.html' , context)

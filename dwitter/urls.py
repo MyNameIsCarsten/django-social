@@ -14,10 +14,12 @@ from django.contrib.auth.views import (
     PasswordResetCompleteView
 )
 
-from dwitter.views import ResetPasswordView, SignUpView, model_form_upload
+from dwitter.views import ResetPasswordView, SignUpView, model_form_upload, profile_edit
 #from dwitter.views import simple_upload
+from .models import  Profile
 
 app_name = "dwitter"
+
 
 urlpatterns = [
     # access to all of the following URLs:
@@ -32,7 +34,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
 
 
-    path("", dashboard, name="dashboard"),
+    path("", dashboard, {}, name="dashboard") ,
     
     # route requests that come to /profile_list to the view function called profile_list()
     path("profile_list/", profile_list, name="profile_list"),
@@ -53,7 +55,7 @@ urlpatterns = [
     path('password-reset/', ResetPasswordView.as_view(), name='password_reset'),
 
     # PasswordResetConfirmView is the view responsible for presenting this password reset form, and validating the token 
-    # i.e. whether or not the token has expired, or if it has been used already
+    # i.e. whether or not the token has ex ResetPasswordView.as_view()pired, or if it has been used already
     # uidb64: The user’s id encoded in base 64.
     # token: Password recovery token to check that the password is valid.
     path('password-reset-confirm/<uidb64>/<token>/',
@@ -67,5 +69,9 @@ urlpatterns = [
     #url(r'^uploads/simple/$', simple_upload, name='simple_upload'),
 
     url(r'^uploads/model/$', model_form_upload, name='model_form_upload'),
+
+    # change profile urls
+    #path('profile_change/', ProfileView.as_view(), name='change_profile'),
+    path("profile/<int:pk>/edit/", profile_edit, name="profile_edit"),   
 
 ]

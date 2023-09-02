@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .avatar {
+        border-radius: 100px;
+        width: 200px;
+        aspect-ratio: 1/1;
+    }
+
+
+</style>
+
+<div class="column is-one-third">
+
+    <div class="block">
+    <h1 class="title is-1">
+        Change Avatar
+    </h1>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <br>
+    {% if error %}
+    {{ error }}
+    {% endif %}
+    <br>
+
+    {% if profile.user_avatar %}
+        <img class="avatar" src="../../../media/{{ profile.user_avatar }}" alt="">
+
+    {% else %}
+        <img class="avatar" src="https://bulma.io/images/placeholders/96x96.png" alt="">
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="button is-success is-fullwidth is-medium mt-5" type="submit">Upload</button>
+    </form>
+
+
+{% endblock content %}

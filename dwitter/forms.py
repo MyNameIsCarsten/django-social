@@ -1,7 +1,7 @@
 # import Django’s built-in forms module 
 from django import forms
 # import the Dweet model that you created
-from .models import Dweet, some_files
+from .models import Dweet, some_files, Profile
 
 # create a new class, DweetForm, that inherits from forms.ModelForm
 class DweetForm(forms.ModelForm):
@@ -40,4 +40,10 @@ class some_filesForm(forms.ModelForm):
         model = some_files
         fields = ('description', 'some_file')
         #fields = ('description', 'some_file', 'file_of_user')
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('user_avatar',)
+
         

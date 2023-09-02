@@ -18,7 +18,7 @@ class Profile(models.Model):
     # on_delete parameter specifies that when a User is deleted, the associated Profile should also be deleted
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    #user_avatar = models.ImageField(upload_to='images/', blank=True)
+    user_avatar = models.ImageField(upload_to='images/', blank=True)
 
     # creates a many-to-many relationship field within the Profile model
     follows = models.ManyToManyField(
