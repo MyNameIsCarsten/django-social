@@ -18,6 +18,8 @@ class Profile(models.Model):
     # on_delete parameter specifies that when a User is deleted, the associated Profile should also be deleted
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+    user_avatar = models.ImageField(upload_to='images/', blank=True)
+
     # creates a many-to-many relationship field within the Profile model
     follows = models.ManyToManyField(
         "self",
@@ -33,6 +35,8 @@ class Profile(models.Model):
     # returns the value of username from the associated instance of the User model
     def __str__(self):
         return self.user.username
+ 
+
  
 # signal receiver decorator
 # connects the create_profile function to the post_save signal emitted by the User model
@@ -57,7 +61,7 @@ def create_profile(sender, instance, created, **kwargs):
 
 class Dweet(models.Model):
     # user field establishes the model relationship to Django’s built-in User model
-    # foreign key relationship: each dweet will be associated with a user
+    # foreign key relationship: each dweet will be associated with only one user
     # pass "dweets" to related_name: allows you to access the dweet objects from the user side of the relationship through .dweets
     # orphaned dweets should stick around by setting on_delete to models.DO_NOTHING
     user = models.ForeignKey(
@@ -68,9 +72,15 @@ class Dweet(models.Model):
     # body field defines your content type
     body = models.CharField(max_length=140)
 
+    # optional image field
+    dweet_image = models.ImageField(upload_to='photos', blank=True)
+
     # created_at field records the date and time when the text-based message is submitted
     # value gets automatically added when a user submits a dweet
     created_at = models.DateTimeField(auto_now_add=True)
+
+    # many-to-many: users can make multiple likes and dweets can have multiple likes
+    likes = models.ManyToManyField(User, related_name='dweet_likes')
 
     # custom string: username, the created date, and the first thirty characters of the message body
     def __str__(self):
@@ -79,4 +89,27 @@ class Dweet(models.Model):
             f"({self.created_at:%Y-%m-%d %H:%M}): "
             f"{self.body[:30]}..."
         )
+    
+    # return the number of likes
+    def number_of_likes(self):
+        return self.likes.count()
+    
 
+# file model
+class some_files(models.Model):
+    user = models.ForeignKey(
+        # 'user_files' gives you reverse access to the associated some_files objects through the User model
+        User, related_name="user_files", on_delete=models.CASCADE
+    )
+
+    description = models.CharField(max_length=255, blank=False)
+    some_file = models.FileField(upload_to='some_files')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    
+
+    def __str__(self):
+        return (
+            f"{self.description} "
+            f"({self.uploaded_at:%Y-%m-%d %H:%M}): "
+        )
+    

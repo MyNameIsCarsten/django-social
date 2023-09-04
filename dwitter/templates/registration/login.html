@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+<style>
+    label, input {
+        display: block;
+    }
+    span.helptext {
+        display: none;
+    }
+</style>
+
+    <div class="column is-one-third">
+        <div class="block">
+            
+            <h2 class="title is-4">Login</h2>
+        
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <a href="{% url 'dwitter:password_reset' %}">Reset password</a>
+                <input class="button is-success is-fullwidth is-medium mt-5" type="submit" value="Login">
+            </form>
+            
+            <a href="{% url 'dwitter:signup' %}">Signup</a>
+            
+        </div>
+    </div>
+    <article class="message is-success">
+        {% if messages %}
+        <div class="message-header">
+            <p>Success</p>
+          </div>
+        <div class="message-body">
+            {% for m in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ m }}</li>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    </article>
+    
+
+{% endblock %}
+    

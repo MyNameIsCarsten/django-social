@@ -12,10 +12,94 @@
           <title>Dwitter</title>
 </head>
 <body>
+    <style>
+        .level-left {
+            margin-left: 0.2rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        .level{
+            background-color: #48c78e;
+            padding: 1.5em;
+            margin-bottom: 0rem !important;
+        }
+
+        .level-item a {
+            color: white;
+        }
+
+        .pipe {
+            color: white;
+            padding: 0px 10px;
+        }
+
+        .level-item a:hover {
+            color: rgb(218, 218, 218);
+        }
+
+        .user {
+            font-weight: bold;
+        }
+
+        .avatar-nav {
+            border-radius: 100px;
+            width: 40px;
+            aspect-ratio: 1/1;
+        }
+    </style>
+    <nav class="level">
+        <div class="level-left">
+            <p class="level-item">
+                <a href="{% url 'dwitter:dashboard' %}">Dashboard</a>
+            </p>
+            
+            
+        </div>
+        <div class="level-right">
+            {% if user.is_authenticated %}
+                <p class="level-item user">
+                    <a href="{% url 'dwitter:profile' request.user.profile.id %}">
+                        {{ user.username }}                      
+                    </a>
+                </p>
+                <p class="level-item user">
+                    <a href="{% url 'dwitter:profile' request.user.profile.id %}">
+                        {% if loggedInUser.user_avatar %}
+                        <img class="avatar-nav" src="../../../media/{{ loggedInUser.user_avatar }}" alt="">
+                        {% endif %}
+                    </a>
+                </p>
+                <span class="pipe">|</span>
+            
+                <p class="level-item">
+                    <a href="{% url 'dwitter:logout' %}">Logout</a>
+                </p>
+                <p class="level-item">
+                    <a href="{% url 'dwitter:change_password' %}">Change password</a>
+                </p>
+                <p class="level-item">
+                    <a href="{% url 'dwitter:model_form_upload' %}">Upload File</a>
+                </p>  
+                {% else %}
+                <p class="level-item">
+                    <a href="{% url 'dwitter:login' %}">Login</a>
+                </p>
+            {% endif %}
+        </div>
+    </nav>
     <a href="{% url 'dwitter:dashboard' %} ">
         <section class="hero is-small is-success mb-4">
             <div class="hero-body">
-                <h1 class="title is-1">Dwitter</h1>
+                <h1 class="title is-1">
+                    <span>Dwitter</span>
+                    {% block hello %}
+                    {% if user.username %}
+                    <span class="title is-1">, welcome {{ user.username|default:'' }}!</span>
+                    {% endif %}
+                {% endblock %}
+                </h1>
+                
                 <p class="subtitle is-4">
                     Your tiny social network built with Django
                 </p>

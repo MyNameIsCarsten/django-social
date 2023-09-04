@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<style>
+  label, input {
+      display: block;
+  }
+  span.helptext {
+      display: none;
+  }
+</style>
+
+<div class="column is-one-third">
+    <div class="block">
+        
+        <h2 class="title is-4">Sign Up</h2>
+
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button class="button is-success is-fullwidth is-medium mt-5" type="submit">Sign Up</button>
+        </form>
+        <a href="{% url 'dwitter:login' %}">Back to login</a>
+    </div>
+  </div>
+{% endblock %}

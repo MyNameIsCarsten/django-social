@@ -1,7 +1,7 @@
 # import Django’s built-in forms module 
 from django import forms
 # import the Dweet model that you created
-from .models import Dweet
+from .models import Dweet, some_files, Profile
 
 # create a new class, DweetForm, that inherits from forms.ModelForm
 class DweetForm(forms.ModelForm):
@@ -24,6 +24,7 @@ class DweetForm(forms.ModelForm):
         label="",
     )
 
+
     # create a Meta options class in DweetForm
     # allows you to pass any information that isn’t a field to your form class.
     class Meta:
@@ -32,5 +33,18 @@ class DweetForm(forms.ModelForm):
         model = Dweet
 
         # omit our profile
-        # fromat as tuple!
-        exclude = ("user", )
+        # format as tuple!
+        exclude = ("user", 'likes' )
+
+class some_filesForm(forms.ModelForm):
+    class Meta:
+        model = some_files
+        fields = ('description', 'some_file')
+        #fields = ('description', 'some_file', 'file_of_user')
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('user_avatar',)
+
+        
