@@ -88,37 +88,53 @@ def dashboard(request):
         # access all profiles
         profiles = Profile.objects.all()
 
-        #print(get_object_or_404(Dweet, id=request.POST.get('dweet_id')))
+        id = request.user.id
+        #obj= get_object_or_404(Dweet, id=id) 
 
-        '''
-        dweet = get_object_or_404(Dweet, id=request.POST.get('dweet_id'))
-        # Check if User id is present in dweet likes
-        if dweet.likes.filter(id=request.user.id).exists():
-            dweet.likes.remove(request.user)
-        else:
-            dweet.likes.add(request.user)
+        like = False
 
- 
-        def get_context_data(self, **kwargs):
-            data = get_context_data(**kwargs)
+        if request.method == "POST":
+            # get id of liked post
+            dweet_id_liked = request.POST.get('dweet_id')
 
-            # retrieve current dweet primary key
-            likes_connected = get_object_or_404(Dweet, id=self.kwargs['pk'])
-            liked = False
-            # if current user has liked this dweet
-            if likes_connected.likes.filter(id=self.request.user.id).exists():
-                liked = True
-            data['number_of_likes'] = likes_connected.number_of_likes()
-            data['dweet_is_liked'] = liked
-            return data
-        '''
+            print(dweet_id_liked)
+            print(request.user.id)
+            print(User.objects.filter(id=request.user.id))
+
+            # filter liked post from database
+            dweet_instance = Dweet.objects.get(id=dweet_id_liked)
+            print(dweet_instance)
+
+            # get all likes for this post
+            likes = dweet_instance.likes.all()
+
+            if likes.filter(username=request.user.username).exists():
+                like = True
+                # Update database
+                dweet_instance.likes.remove(request.user)
+
+
+            else:
+                like = False
+                # Update databas
+                dweet_instance.likes.add(request.user)
+
+        
+        like_status = {}
+        curUser = request.user.username
+
+        for d in Dweet.objects.all():
+            for dweet in d.likes.all():
+                if str(dweet) == curUser:
+                    like_status[d.id] = True
+
 
         # passed it to your dashboard template in your context dictionary under the key "form"
         return render(
             request, 
             "dwitter/dashboard.html", 
             # followed_dweets variable contains a QuerySet object of all the dweets of all the profiles the current user follows, ordered by the newest dweet first
-            {"form": form, "dweets": followed_dweets, 'loggedInUser': obj, 'profile':profiles },
+            {"form": form, "dweets": followed_dweets, 'loggedInUser': obj, 'profile':profiles, 'like_status': like_status },
             )
     # if not, redirect to login page
     else:

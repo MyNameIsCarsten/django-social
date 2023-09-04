@@ -59,15 +59,16 @@
                 {% endif %}
 
             </div>
-            
+
+           
             <div>
                 <form method="POST">
                     {% csrf_token %}
 
-                    {% if dweet_is_liked %}
-                    <button type="submit" name="dweet_id" value="{{object.id}}">Unlike</button> 
+                    {% if dweet.id in like_status %}
+                    <button type="submit" name="dweet_id" value="{{dweet.id}}">Unlike</button> 
                     {% else %}
-                    <button type="submit" name="dweet_id" value="{{object.id}}">Like</button> 
+                    <button type="submit" name="dweet_id" value="{{dweet.id}}">Like</button> 
                     {% endif %}
                 </form>
                 <strong>{{number_of_likes}} Like {{number_of_likes|pluralize}}</strong>
