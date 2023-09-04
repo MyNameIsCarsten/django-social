@@ -66,17 +66,20 @@
                     {% csrf_token %}
 
                     {% if dweet.id in like_status %}
-                    <button type="submit" name="dweet_id" value="{{dweet.id}}">Unlike</button> 
+                    <button  class="button is-danger" type="submit" name="dweet_id" value="{{dweet.id}}">Unlike</button> 
                     {% else %}
-                    <button type="submit" name="dweet_id" value="{{dweet.id}}">Like</button> 
+                    <button   class="button is-success" type="submit" name="dweet_id" value="{{dweet.id}}">Like</button> 
                     {% endif %}
                 </form>
-                <strong>{{number_of_likes}} Like {{number_of_likes|pluralize}}</strong>
+                <strong>{{dweet.number_of_likes}} Like{{dweet.number_of_likes|pluralize}}</strong>
             </div>
             
             
             <span class="is-small has-text-grey-light">
                 ({{ dweet.created_at }} by {{ dweet.user.username }})
+            </span>
+            <span class="is-small has-text-grey-light">
+                <a href="{% url 'dwitter:dweet_detail' dweet.id %}">View full Dweet</a>
             </span>
         </div>
     {% endfor %}

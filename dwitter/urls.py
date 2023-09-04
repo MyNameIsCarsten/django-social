@@ -14,7 +14,7 @@ from django.contrib.auth.views import (
     PasswordResetCompleteView
 )
 
-from dwitter.views import ResetPasswordView, SignUpView, model_form_upload, profile_edit
+from dwitter.views import ResetPasswordView, SignUpView, model_form_upload, profile_edit, DweetDetailView
 #from dwitter.views import simple_upload
 from .models import  Profile
 
@@ -74,4 +74,6 @@ urlpatterns = [
     #path('profile_change/', ProfileView.as_view(), name='change_profile'),
     path("profile/<int:pk>/edit/", profile_edit, name="profile_edit"),   
 
+
+    path("dweet/<int:pk>/", DweetDetailView.as_view(), name="dweet_detail"),   
 ]

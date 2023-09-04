@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .avatar {
+        border-radius: 100px;
+        width: 200px;
+        aspect-ratio: 1/1;
+    }
+
+    .avatar-dash{
+        border-radius: 100px;
+        width: 80px;
+        aspect-ratio: 1/1;
+    }
+</style>
+
+<div class="column">
+    <div class="column">
+        <div class="box">
+            <div class="text-container">
+                {% for prof in  profiles %}
+                {% if prof.id == dweet.user_id %}
+                    <a href="{% url 'dwitter:profile' prof.id %}">
+                        {% if prof.user_avatar %}
+                            <img class="avatar-dash" src="../../../media/{{ prof.user_avatar }}" alt="">
+                        {% else %}
+                            <img class="avatar-dash" src="https://bulma.io/images/placeholders/96x96.png" alt="">
+                        {% endif %}
+                    </a>
+                {% endif %}
+                {% endfor %}
+                <p>{{dweet.body}}</p>
+                
+    
+            </div>
+            
+            <div class="image-container">
+                {% if dweet.dweet_image %}
+                <img class="" src="../../media/{{ dweet.dweet_image }}" alt="">
+                {% else %}
+    
+                {% endif %}
+    
+            </div>
+    
+           
+            <div>
+                <form method="POST">
+                    {% csrf_token %}
+    
+                    {% if dweet.id in like_status %}
+                    <button  class="button is-danger" type="submit" name="dweet_id" value="{{dweet.id}}">Unlike</button> 
+                    {% else %}
+                    <button   class="button is-success" type="submit" name="dweet_id" value="{{dweet.id}}">Like</button> 
+                    {% endif %}
+                </form>
+                <strong>{{dweet.number_of_likes}} Like{{dweet.number_of_likes|pluralize}}</strong>
+            </div>
+            
+            
+            <span class="is-small has-text-grey-light">
+                ({{ dweet.created_at }} by {{ dweet.user.username }})
+            </span>
+        </div>
+    </div>
+    
+    
+
+</div>
+
+
+</div>
+
+{% endblock content %}

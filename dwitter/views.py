@@ -18,8 +18,13 @@ from django.contrib.messages.views import SuccessMessageMixin
 
 from django.views import generic
 
+from django.views.generic.detail import DetailView
+
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def base_infos(request):
@@ -28,6 +33,7 @@ def base_infos(request):
     return obj
 
 # pointing the incoming request to base.html and telling Django to render that template
+@login_required
 def dashboard(request):
 
     # Check if the user is logged in
@@ -113,7 +119,6 @@ def dashboard(request):
                 # Update database
                 dweet_instance.likes.remove(request.user)
 
-
             else:
                 like = False
                 # Update databas
@@ -140,6 +145,7 @@ def dashboard(request):
     else:
         return redirect("dwitter:login")
 
+@login_required
 def profile_list(request):
     obj = base_infos(request)
     # use Django’s object-relational mapper (ORM) to retrieve objects from your profile table
@@ -151,6 +157,7 @@ def profile_list(request):
     # context dictionary that contains profiles
     return render(request, "dwitter/profile_list.html", {"profiles": profiles, 'loggedInUser': obj})
 
+@login_required
 def profile(request, pk):
     obj = base_infos(request)
     # in case you haven’t created profiles for you and your existing users
@@ -190,7 +197,7 @@ def profile(request, pk):
 
 
 
-
+@login_required
 def change_password(request):
     obj = base_infos(request)
     if request.method == 'POST':
@@ -211,7 +218,7 @@ def change_password(request):
 
 
 
-class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+class ResetPasswordView(LoginRequiredMixin, SuccessMessageMixin, PasswordResetView):
     # if not given any, django defaults to registration/password_reset_form.html to render the associated template for the view
     template_name = 'dwitter/password_reset.html'
     # template used for generating the body of the email with the reset password link
@@ -248,7 +255,7 @@ def simple_upload(request):
     return render(request, 'dwitter/simple_upload.html')
 '''
 
-
+@login_required
 def model_form_upload(request):
     obj = base_infos(request)
     if request.method == 'POST':
@@ -278,7 +285,7 @@ class ProfileView(generic.CreateView):
     template_name = "dwitter/profile_change.html"
 '''
 
-    
+@login_required  
 def profile_edit(request, pk):
 
     obj = base_infos(request)  
@@ -313,3 +320,17 @@ def profile_edit(request, pk):
             return render(request,'dwitter/profile_change.html' , context)
     else:
         return render(request,'dwitter/profile_change.html' , context)
+
+
+class DweetDetailView(LoginRequiredMixin, DetailView):
+    model = Dweet  
+
+    def get_context_data(self, **kwargs):
+        context = super(DweetDetailView, self).get_context_data(**kwargs)
+        request = self.request
+
+        # Include the 'profiles' queryset in the context
+        context['profiles'] = Profile.objects.all()
+        context['loggedInUser']  = base_infos(request)
+
+        return context

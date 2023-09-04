@@ -1,6 +1,6 @@
 # Social Network build with Django
 
-By following the tutorials on [Real Python](https://realpython.com/) I have successfully build a social network with Django.
+By following and extending the tutorials on [Real Python](https://realpython.com/) I have successfully build a social network with Django.
 
 Users are able to post and see their own dweets, as well the dweets of users that they are following.
 
@@ -10,13 +10,47 @@ The project has strengthened my understanding of relationships between Django mo
 
 I have additionally used the Bulma CSS framework to make my site look good.
 
+# Extended features
+These features were not part of the tutorial, but where added by me (which I am very proud of):
+- [Login](#login)
+- [The navigation bar](#the-navigation-bar)
+- [Like and Unlike](#like-and-unlike)
+- [Profile Images](#profiles)
+- Dweets can contain images
+
+# Login
+![Login](./login.jpg)
+
+Everyone is required to login before being able to access the plattform.
+
+## The navigation bar
+![Nav Bar](./nav-bar.jpg)
+
+The navigation bar allows the user to always return to the dashboard (left), it shows their profile name and avatar and it gives quick access to:
+- Logout
+- Change password
+- Upload File
+
+## The Dashboard
+
 ![Dashboard](./dashboard.jpg)
+
+The dashboard shows dweets of profiles the user is following, enables the user to like or unlike a dweet as well as post a new dweet.
+
+### Like and Unlike
+Dweets can also contain images.
+
+![Like](./unlike.jpg)
+![Unlike](./like.jpg)
+
+## Profiles
 
 The network includes a page for viewing all profiles:
 
 ![Profiles](./profiles.jpg)
 
-The users can also view their profiles:
+The users can also view profiles by clicking on the avatars:
+(If the current user is accessing their own profile the get the opportunity to `Change Avatar`)
 
 ![Profiles](./my-profile.jpg)
 
@@ -129,7 +163,3 @@ The users can also view their profiles:
 
 
 
-# Coming Up
-- Implement User Authentication: Allow new users to sign up through the front end of your web app by following the steps outlined in [Get Started With Django Part 2: Django User Management](https://realpython.com/django-user-management/).
-- Optional: [Set up sending email in Django](https://dev.to/earthcomfy/django-reset-password-3k0l)
-- Deploy Your Dwitter Project: Put web app online for the whole world to see by [hosting my Django project on Heroku](https://realpython.com/django-hosting-on-heroku/).
