@@ -29,6 +29,7 @@ def base_infos(request):
 
 # pointing the incoming request to base.html and telling Django to render that template
 def dashboard(request):
+
     # Check if the user is logged in
     # if yes, show dashboard with dweets
 
@@ -75,12 +76,49 @@ def dashboard(request):
         # sort the dweets in descending order of created_at
         ).order_by("-created_at")
 
+        # access current user
+        curUser = User.objects.get(username = request.user)
+
+        # access all dweet ids
+        dweet_id = Dweet.objects.values_list('id')
+
+        # access all dweet user ids
+        user_id = Dweet.objects.values_list('user_id')
+
+        # access all profiles
+        profiles = Profile.objects.all()
+
+        #print(get_object_or_404(Dweet, id=request.POST.get('dweet_id')))
+
+        '''
+        dweet = get_object_or_404(Dweet, id=request.POST.get('dweet_id'))
+        # Check if User id is present in dweet likes
+        if dweet.likes.filter(id=request.user.id).exists():
+            dweet.likes.remove(request.user)
+        else:
+            dweet.likes.add(request.user)
+
+ 
+        def get_context_data(self, **kwargs):
+            data = get_context_data(**kwargs)
+
+            # retrieve current dweet primary key
+            likes_connected = get_object_or_404(Dweet, id=self.kwargs['pk'])
+            liked = False
+            # if current user has liked this dweet
+            if likes_connected.likes.filter(id=self.request.user.id).exists():
+                liked = True
+            data['number_of_likes'] = likes_connected.number_of_likes()
+            data['dweet_is_liked'] = liked
+            return data
+        '''
+
         # passed it to your dashboard template in your context dictionary under the key "form"
         return render(
             request, 
             "dwitter/dashboard.html", 
             # followed_dweets variable contains a QuerySet object of all the dweets of all the profiles the current user follows, ordered by the newest dweet first
-            {"form": form, "dweets": followed_dweets, 'loggedInUser': obj},
+            {"form": form, "dweets": followed_dweets, 'loggedInUser': obj, 'profile':profiles },
             )
     # if not, redirect to login page
     else:

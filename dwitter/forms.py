@@ -24,6 +24,7 @@ class DweetForm(forms.ModelForm):
         label="",
     )
 
+
     # create a Meta options class in DweetForm
     # allows you to pass any information that isn’t a field to your form class.
     class Meta:
@@ -32,8 +33,8 @@ class DweetForm(forms.ModelForm):
         model = Dweet
 
         # omit our profile
-        # fromat as tuple!
-        exclude = ("user", )
+        # format as tuple!
+        exclude = ("user", 'likes' )
 
 class some_filesForm(forms.ModelForm):
     class Meta:

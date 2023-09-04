@@ -72,9 +72,15 @@ class Dweet(models.Model):
     # body field defines your content type
     body = models.CharField(max_length=140)
 
+    # optional image field
+    dweet_image = models.ImageField(upload_to='photos', blank=True)
+
     # created_at field records the date and time when the text-based message is submitted
     # value gets automatically added when a user submits a dweet
     created_at = models.DateTimeField(auto_now_add=True)
+
+    # many-to-many: users can make multiple likes and dweets can have multiple likes
+    likes = models.ManyToManyField(User, related_name='dweet_likes')
 
     # custom string: username, the created date, and the first thirty characters of the message body
     def __str__(self):
@@ -83,6 +89,11 @@ class Dweet(models.Model):
             f"({self.created_at:%Y-%m-%d %H:%M}): "
             f"{self.body[:30]}..."
         )
+    
+    # return the number of likes
+    def number_of_likes(self):
+        return self.likes.count()
+    
 
 # file model
 class some_files(models.Model):
