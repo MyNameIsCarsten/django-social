@@ -14,7 +14,7 @@ I have additionally used the Bulma CSS framework to make my site look good.
 These features were not part of the tutorial, but where added by me (which I am very proud of):
 - [Login](#login)
 - [The navigation bar](#the-navigation-bar)
-- [Like and Unlike](#like-and-unlike)
+- [Like and Unlike (including use of Model methods fpr DTL)](#like-and-unlike)
 - [Profile Images](#profiles)
 - Dweets can contain images
 

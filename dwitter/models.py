@@ -94,6 +94,9 @@ class Dweet(models.Model):
     def number_of_likes(self):
         return self.likes.count()
     
+    def liked_by_profiles(self):
+        return self.likes.all()
+    
 
 # file model
 class some_files(models.Model):
