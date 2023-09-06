@@ -125,21 +125,12 @@ def dashboard(request):
                 dweet_instance.likes.add(request.user)
 
         
-        like_status = {}
-        curUser = request.user.username
-
-        for d in Dweet.objects.all():
-            for dweet in d.likes.all():
-                if str(dweet) == curUser:
-                    like_status[d.id] = True
-
-
         # passed it to your dashboard template in your context dictionary under the key "form"
         return render(
             request, 
             "dwitter/dashboard.html", 
             # followed_dweets variable contains a QuerySet object of all the dweets of all the profiles the current user follows, ordered by the newest dweet first
-            {"form": form, "dweets": followed_dweets, 'loggedInUser': obj, 'profile':profiles, 'like_status': like_status },
+            {"form": form, "dweets": followed_dweets, 'loggedInUser': obj, 'profile':profiles },
             )
     # if not, redirect to login page
     else:
